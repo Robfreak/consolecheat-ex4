@@ -6,18 +6,28 @@
  * Formats (little-endian uint16): 0x0004 utf-8 special, 0x0204 utf-8, 0x0404 uint32.
  *
  * PARAMS timestamps (same page): uint64 LE at 0x60 created, 0x68 last modified, Unix seconds.
- * SAVEDATA_LIST_PARAM is the save's user integer. It is used as a date only when that
- * integer is a Unix time in the PS4 era. Otherwise the date falls through to PARAMS,
- * then to the file's lastModified. Each source is labelled by the caller.
+ * The date uses the first plausible Unix time in this order: PARAMS 0x68, PARAMS 0x60,
+ * SAVEDATA_LIST_PARAM (only when that user integer is a Unix time in the PS4 era),
+ * then the file's lastModified. Each source is labelled by the caller.
+ *
+ * ACCOUNT_ID is an 8-byte little-endian uint64. Display is 16 zero-padded hex digits
+ * of that integer, not the bytes in file order.
  */
 
-import { accountDisplay } from "./mask.ts";
+import { accountDisplay, accountIdFromBytes } from "./mask.ts";
 
 export const SFO_MAX_BYTES = 1024 * 1024;
 
 export type SfoFormat = "utf8" | "utf8-special" | "int32" | "unknown";
 
-export type SfoErrorCode = "not-sfo" | "truncated" | "bad-offset" | "encrypted" | "too-big";
+export type SfoErrorCode =
+  | "not-sfo"
+  | "truncated"
+  | "bad-offset"
+  | "bad-format"
+  | "too-many"
+  | "encrypted"
+  | "too-big";
 
 export class SfoParseError extends Error {
   readonly code: SfoErrorCode;
@@ -147,7 +157,7 @@ export function parseSfo(input: Uint8Array): SfoDocument {
   const dataOff = view.getUint32(12, true);
   const count = view.getUint32(16, true);
 
-  if (count > MAX_ENTRIES) fail("bad-offset");
+  if (count > MAX_ENTRIES) fail("too-many");
   if (keyOff < HEADER_SIZE || dataOff < HEADER_SIZE) fail("bad-offset");
 
   const indexEnd = HEADER_SIZE + count * INDEX_SIZE;
@@ -194,6 +204,7 @@ export function parseSfo(input: Uint8Array): SfoDocument {
     let format: SfoFormat = "unknown";
     let text: string | null = null;
     let int32: number | null = null;
+    if (formatCode !== 0x0204 && formatCode !== 0x0004 && formatCode !== 0x0404) fail("bad-format");
     if (formatCode === 0x0204) {
       format = "utf8";
       text = decodeCString(value);
@@ -230,7 +241,8 @@ export function findEntry(entries: readonly SfoEntry[], key: string): SfoEntry |
 export function entryText(entries: readonly SfoEntry[], key: string): string | null {
   const entry = findEntry(entries, key);
   if (!entry) return null;
-  if (key === "ACCOUNT_ID") return entry.hex || null;
+  if (key === "ACCOUNT_ID") return entry.bytes.length ? accountIdFromBytes(entry.bytes) : null;
+  if (entry.format !== "utf8" && isNumericKey(entry.key)) return unsignedLeDecimal(entry.bytes);
   const text = entry.text?.trim() ?? "";
   return text.length ? text : null;
 }
@@ -275,18 +287,20 @@ function readU64(bytes: Uint8Array, offset: number): number | null {
 }
 
 export function readSaveDate(entries: readonly SfoEntry[], fileModifiedMs: number | null): SaveDate | null {
-  const list = findEntry(entries, "SAVEDATA_LIST_PARAM");
-  if (list) {
-    const unix = unixFromEntry(list);
-    if (unix !== null) return { source: "savedata-list-param", ms: unix * 1000 };
-  }
-
   const params = findEntry(entries, "PARAMS");
   if (params && params.bytes.length >= 0x70) {
     const modified = readU64(params.bytes, 0x68);
     if (modified !== null && plausibleUnix(modified)) return { source: "params-modified", ms: modified * 1000 };
+  }
+  if (params && params.bytes.length >= 0x68) {
     const created = readU64(params.bytes, 0x60);
     if (created !== null && plausibleUnix(created)) return { source: "params-created", ms: created * 1000 };
+  }
+
+  const list = findEntry(entries, "SAVEDATA_LIST_PARAM");
+  if (list) {
+    const unix = unixFromEntry(list);
+    if (unix !== null) return { source: "savedata-list-param", ms: unix * 1000 };
   }
 
   if (fileModifiedMs !== null && Number.isFinite(fileModifiedMs) && fileModifiedMs > 0) {
@@ -295,13 +309,64 @@ export function readSaveDate(entries: readonly SfoEntry[], fileModifiedMs: numbe
   return null;
 }
 
+/** Integer keys stored as uint / utf-8 special, from the PARAM.SFO key list. */
+const NUMERIC_KEYS = new Set([
+  "APP_TYPE",
+  "ATTRIBUTE",
+  "ATTRIBUTE2",
+  "ATTRIBUTE_MINOR",
+  "DEV_FLAG",
+  "DISC_NUMBER",
+  "DISC_TOTAL",
+  "DISP_LOCATION",
+  "DOWNLOAD_DATA_SIZE",
+  "EMU_VERSION",
+  "IRO_TAG",
+  "PARENTAL_LEVEL",
+  "PARENTAL_LEVEL_ORIGINAL",
+  "PT_PARAM",
+  "PUBTOOLMINVER",
+  "PUBTOOLVER",
+  "PUBTOOL_VERSION",
+  "REMOTE_PLAY_KEY_ASSIGN",
+  "SAVEDATA_BLOCKS",
+  "SAVEDATA_LIST_PARAM",
+  "SYSTEM_ROOT_VER",
+  "SYSTEM_VER",
+]);
+
+function isNumericKey(key: string): boolean {
+  const name = key.toUpperCase();
+  if (NUMERIC_KEYS.has(name)) return true;
+  return /^USER_DEFINED_PARAM_\d+$/.test(name) || /^DISP_LOCATION_\d+$/.test(name);
+}
+
+function unsignedLeDecimal(bytes: Uint8Array): string | null {
+  if (bytes.length === 0 || bytes.length > 8) return null;
+  let value = 0n;
+  for (let i = 0; i < bytes.length; i++) value |= BigInt(bytes[i] ?? 0) << BigInt(i * 8);
+  return value.toString(10);
+}
+
+/** A utf-8 special value is text when it is a real string, not a binary integer. */
+function isWrittenText(text: string): boolean {
+  return text.length >= 2 && /\p{L}/u.test(text);
+}
+
 /** Text, decimal, or hex for the raw list. ACCOUNT_ID follows the reveal flag. */
 export function rawValue(entry: SfoEntry, revealAccount: boolean): string {
-  if (entry.key.toUpperCase() === "ACCOUNT_ID") return accountDisplay(entry.hex, revealAccount);
+  if (entry.key.toUpperCase() === "ACCOUNT_ID") {
+    return accountDisplay(accountIdFromBytes(entry.bytes), revealAccount);
+  }
   if (entry.format === "int32" && entry.int32 !== null) {
     return `${entry.int32} (0x${entry.int32.toString(16).toUpperCase().padStart(8, "0")})`;
   }
-  if (entry.text !== null && entry.text !== "") return entry.text;
+  if (entry.format !== "utf8" && isNumericKey(entry.key)) {
+    const decimal = unsignedLeDecimal(entry.bytes);
+    if (decimal !== null) return decimal;
+  }
+  if (entry.format === "utf8" && entry.text) return entry.text;
+  if (entry.format === "utf8-special" && entry.text && isWrittenText(entry.text)) return entry.text;
   if (entry.hex) return entry.hex;
   return "";
 }

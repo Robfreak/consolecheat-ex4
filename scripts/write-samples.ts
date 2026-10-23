@@ -7,6 +7,7 @@ import {
   badOffsetBytes,
   encryptedBytes,
   fileDateBytes,
+  longTitleBytes,
   paramsDateBytes,
   truncatedBytes,
   unknownKeyBytes,
@@ -74,6 +75,7 @@ const files: Record<string, Uint8Array | Buffer> = {
   "samples/encrypted.sfo": encryptedBytes(),
   "samples/params-date.sfo": paramsDateBytes(),
   "samples/file-date.sfo": fileDateBytes(),
+  "samples/long-title.sfo": longTitleBytes(),
   "samples/sce_sys/param.sfo": validSaveBytes(),
   "samples/sce_sys/icon0.png": iconPng(),
 };

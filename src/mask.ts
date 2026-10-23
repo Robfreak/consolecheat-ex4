@@ -25,3 +25,17 @@ export function revealAccountHex(hex: string): string {
 export function accountDisplay(hex: string, reveal: boolean): string {
   return reveal ? revealAccountHex(hex) : maskAccountHex(hex);
 }
+
+/**
+ * ACCOUNT_ID is a little-endian uint64 (PS4 Developer wiki, PARAM.SFO).
+ * The printed form is that integer as 16 hex digits, zero-padded.
+ * File bytes 00 11 22 33 44 55 66 77 are 7766554433221100.
+ */
+export function accountIdFromBytes(bytes: Uint8Array): string {
+  let hex = "";
+  for (let i = 7; i >= 0; i--) {
+    const byte = bytes[i] ?? 0;
+    hex += byte.toString(16).padStart(2, "0");
+  }
+  return hex.toUpperCase();
+}

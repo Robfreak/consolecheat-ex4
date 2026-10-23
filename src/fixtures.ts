@@ -56,6 +56,14 @@ export function paramsDateBytes(): Uint8Array {
   ]);
 }
 
+/** A 128-character title with no spaces, used to check wrapping at a narrow width. */
+export function longTitleBytes(): Uint8Array {
+  return buildSfo([
+    { key: "TITLE", format: "utf8", value: "A".repeat(128) },
+    { key: "TITLE_ID", format: "utf8", value: "CUSA00005" },
+  ]);
+}
+
 /** Nothing inside the SFO is a date. The UI falls back to lastModified. */
 export function fileDateBytes(): Uint8Array {
   return buildSfo([

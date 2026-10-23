@@ -1,8 +1,8 @@
 import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { filesFromList, filesFromTransfer, type LocalFile } from "./files";
-import { MailIcon, Mark, MoonIcon, SunIcon } from "./icons";
+import { Mark, MoonIcon, SunIcon } from "./icons";
 import { LegalPage } from "./legal";
-import { accountDisplay } from "./mask";
+import { accountDisplay, accountIdFromBytes } from "./mask";
 import {
   RTL,
   copy,
@@ -108,6 +108,8 @@ function errorText(t: Copy, code: UiError): string {
   if (code === "not-sfo") return t.errNotSfo;
   if (code === "truncated") return t.errTruncated;
   if (code === "bad-offset") return t.errBadOffset;
+  if (code === "too-many") return t.errTooMany;
+  if (code === "bad-format") return t.errBadFormat;
   if (code === "encrypted") return t.errEncrypted;
   if (code === "too-big") return t.errTooBig;
   if (code === "no-param") return t.errNoParam;
@@ -223,14 +225,6 @@ export function App() {
             <span className="truncate font-display text-lg font-semibold tracking-tight">{t.brand}</span>
           </a>
           <div className="flex items-center gap-2">
-            <a
-              href="https://consolecheat.com"
-              title={t.mailTitle}
-              className="inline-flex h-11 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm font-medium text-fg"
-            >
-              <MailIcon />
-              {t.mail}
-            </a>
             <label className="sr-only" htmlFor="lang">
               {t.language}
             </label>
@@ -431,8 +425,8 @@ function SaveCard({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-4">
           {loaded.iconFile ? <SaveIcon file={loaded.iconFile} alt={t.iconAlt} /> : null}
-          <div className="min-w-0">
-            <h2 className="font-display text-2xl font-semibold tracking-tight">{title ?? loaded.name}</h2>
+          <div className="min-w-0 flex-1">
+            <h2 className="min-w-0 break-anywhere font-display text-2xl font-semibold tracking-tight">{title ?? loaded.name}</h2>
             <p className="mt-1 text-sm text-subtle">{fill(t.readFile, { name: loaded.name })}</p>
           </div>
         </div>
@@ -448,7 +442,7 @@ function SaveCard({
       {loaded.entries.length === 0 ? <p className="mt-4 text-muted">{t.noFields}</p> : null}
 
       <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-        <Field label={t.fieldTitle} wide>
+        <Field label={t.fieldTitle} wide wrap>
           {title ?? <Missing text={t.missing} />}
         </Field>
         <Field label={t.fieldTitleId}>
@@ -480,7 +474,7 @@ function SaveCard({
             <div className="flex flex-col gap-2">
               <div className="flex flex-wrap items-center gap-2">
                 <span id="account-value" className="font-mono text-base font-semibold tracking-wide">
-                  {accountDisplay(account.hex, reveal)}
+                  {accountDisplay(accountIdFromBytes(account.bytes), reveal)}
                 </span>
                 <button
                   type="button"
@@ -559,11 +553,21 @@ function SaveIcon({ file, alt }: { file: File; alt: string }) {
   return <img src={url} alt={alt} className="h-20 w-36 shrink-0 rounded-lg bg-raised object-contain" />;
 }
 
-function Field({ label, children, wide = false }: { label: string; children: ReactNode; wide?: boolean }) {
+function Field({
+  label,
+  children,
+  wide = false,
+  wrap = false,
+}: {
+  label: string;
+  children: ReactNode;
+  wide?: boolean;
+  wrap?: boolean;
+}) {
   return (
-    <div className={`rounded-lg bg-raised px-3 py-3 ${wide ? "sm:col-span-2" : ""}`}>
+    <div className={`min-w-0 rounded-lg bg-raised px-3 py-3 ${wide ? "sm:col-span-2" : ""}`}>
       <dt className="text-sm text-subtle">{label}</dt>
-      <dd className="mt-1 text-base leading-relaxed text-fg">{children}</dd>
+      <dd className={`mt-1 min-w-0 text-base leading-relaxed text-fg ${wrap ? "break-anywhere" : ""}`}>{children}</dd>
     </div>
   );
 }

@@ -15,6 +15,12 @@ test("german is the default and the account toggle uses Anzeigen / Show", () => 
   assert.match(copy.en.privacyClaim, /No upload/);
   assert.match(copy.en.localNote, /no network request/i);
   assert.match(copy.de.localNote, /keine Netzwerkanfrage/i);
+  assert.equal(copy.de.errTooMany, "Die Datei hat zu viele Einträge (mehr als 512).");
+  assert.equal(copy.en.errTooMany, "The file has too many entries (more than 512).");
+  assert.equal(copy.de.errBadFormat, "Ein Feld hat einen ungültigen Typ.");
+  assert.equal(copy.en.errBadFormat, "A field has an invalid type.");
+  assert.equal(copy.de.errTooMany.includes("Offsets"), false);
+  assert.equal(copy.en.errBadFormat.includes("offset"), false);
 });
 
 test("every language has the same filled-in copy", () => {
