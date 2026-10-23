@@ -83,10 +83,21 @@ function finderHref(id: string): string | null {
 
 function formatWhen(ms: number, lang: Lang): string {
   const locale = lang === "no" ? "nb" : lang;
+  const date = new Date(ms);
+  const withZone = { dateStyle: "medium" as const, timeStyle: "short" as const, timeZoneName: "short" as const };
   try {
-    return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(ms));
+    return new Intl.DateTimeFormat(locale, withZone).format(date);
   } catch {
-    return new Date(ms).toISOString();
+    // ICU still rejects timeZoneName together with dateStyle and timeStyle.
+  }
+  try {
+    const when = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(date);
+    const zone = new Intl.DateTimeFormat(locale, { timeZoneName: "short" })
+      .formatToParts(date)
+      .find((part) => part.type === "timeZoneName")?.value;
+    return zone ? `${when} ${zone}` : when;
+  } catch {
+    return date.toISOString();
   }
 }
 

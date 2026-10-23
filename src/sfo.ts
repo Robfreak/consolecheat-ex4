@@ -213,7 +213,7 @@ export function parseSfo(input: Uint8Array): SfoDocument {
       text = decodeSpecial(value);
     } else if (formatCode === 0x0404) {
       format = "int32";
-      if (length !== 4) fail("bad-offset");
+      if (length !== 4) fail("bad-format");
       int32 = view.getUint32(dataPos, true);
       text = String(int32);
     }
