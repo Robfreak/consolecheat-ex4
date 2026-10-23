@@ -122,6 +122,13 @@ test("too many entries and an invalid field type each get their own error", () =
   assert.equal(codeOf(patched), "bad-format");
 });
 
+test("an int32 field whose length is not 4 is an invalid field type", () => {
+  const bytes = buildSfo([{ key: "ATTRIBUTE", format: "int32", value: 1 }]);
+  const patched = bytes.slice();
+  new DataView(patched.buffer).setUint32(24, 2, true);
+  assert.equal(codeOf(patched), "bad-format");
+});
+
 test("the date order is PARAMS 0x68, then 0x60, then the list param, then the file", () => {
   const valid = parseSfo(validSaveBytes()).entries;
   assert.deepEqual(readSaveDate(valid, 1_710_000_000_000), {

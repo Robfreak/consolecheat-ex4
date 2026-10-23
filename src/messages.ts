@@ -37,11 +37,9 @@ export type Lang = (typeof languageOptions)[number]["id"];
 
 export type Copy = {
   brand: string;
-  mail: string;
   title: string;
   formatUtf8: string;
   formatInt32: string;
-  mailTitle: string;
   eyebrow: string;
   lede: string;
   freeClaim: string;
@@ -94,7 +92,6 @@ export type Copy = {
 
 const shared = {
   brand: "consolecheat",
-  mail: "Webmail",
   title: "Save-Info-Leser",
   formatUtf8: "UTF-8",
   formatInt32: "int32",
@@ -108,7 +105,6 @@ function pack(text: Text): Copy {
 
 export const copy: Record<Lang, Copy> = {
   de: pack({
-    mailTitle: "Webmail auf consolecheat.com",
     eyebrow: "PS4-Spielstand · im Browser",
     lede: "PARAM.SFO aus einem PS4-Spielstand lesen. Titel, Title-ID, Beschreibung, Ordner und Account-ID. Die Datei bleibt in diesem Tab.",
     freeClaim: "Komplett kostenlos. Auf dieser Seite kostet nichts Geld.",
@@ -159,7 +155,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Die Ansicht ist abgestürzt. Die Datei bleibt lokal in diesem Tab.",
   }),
   en: pack({
-    mailTitle: "Webmail on consolecheat.com",
     eyebrow: "PS4 save · in the browser",
     lede: "Read a PS4 save’s PARAM.SFO. Title, title ID, description, folder, and account ID. The file stays in this tab.",
     freeClaim: "Completely free. Nothing on this site costs money.",
@@ -210,7 +205,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "This view crashed. The file stays local in this tab.",
   }),
   fr: pack({
-    mailTitle: "Webmail sur consolecheat.com",
     eyebrow: "Sauvegarde PS4 · dans le navigateur",
     lede: "Lire le PARAM.SFO d’une sauvegarde PS4. Titre, title ID, description, dossier et identifiant de compte. Le fichier reste dans cet onglet.",
     freeClaim: "Entièrement gratuit. Rien ne se paie sur ce site.",
@@ -261,7 +255,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "La vue a planté. Le fichier reste local dans cet onglet.",
   }),
   es: pack({
-    mailTitle: "Webmail en consolecheat.com",
     eyebrow: "Partida de PS4 · en el navegador",
     lede: "Leer el PARAM.SFO de una partida de PS4. Título, title ID, descripción, carpeta e ID de cuenta. El archivo se queda en esta pestaña.",
     freeClaim: "Totalmente gratis. En esta página no se paga nada.",
@@ -312,7 +305,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "La vista falló. El archivo sigue en local en esta pestaña.",
   }),
   pt: pack({
-    mailTitle: "Webmail em consolecheat.com",
     eyebrow: "Gravação de PS4 · no navegador",
     lede: "Ler o PARAM.SFO de uma gravação de PS4. Título, title ID, descrição, pasta e ID da conta. O ficheiro fica neste separador.",
     freeClaim: "Totalmente grátis. Nesta página não se paga nada.",
@@ -363,7 +355,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "A vista falhou. O ficheiro fica local neste separador.",
   }),
   it: pack({
-    mailTitle: "Webmail su consolecheat.com",
     eyebrow: "Salvataggio PS4 · nel browser",
     lede: "Legge il PARAM.SFO di un salvataggio PS4. Titolo, title ID, descrizione, cartella e ID account. Il file resta in questa scheda.",
     freeClaim: "Del tutto gratuito. Su questa pagina non si paga.",
@@ -414,7 +405,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "La vista si è bloccata. Il file resta in locale in questa scheda.",
   }),
   nl: pack({
-    mailTitle: "Webmail op consolecheat.com",
     eyebrow: "PS4-save · in de browser",
     lede: "Lees de PARAM.SFO van een PS4-save. Titel, title ID, beschrijving, map en account-ID. Het bestand blijft in dit tabblad.",
     freeClaim: "Helemaal gratis. Op deze pagina kost niets geld.",
@@ -465,7 +455,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "De weergave is vastgelopen. Het bestand blijft lokaal in dit tabblad.",
   }),
   pl: pack({
-    mailTitle: "Webmail na consolecheat.com",
     eyebrow: "Zapis PS4 · w przeglądarce",
     lede: "Czyta PARAM.SFO z zapisu PS4. Tytuł, title ID, opis, folder i ID konta. Plik zostaje w tej karcie.",
     freeClaim: "Całkowicie za darmo. Na tej stronie nic nie kosztuje.",
@@ -516,7 +505,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Widok się wysypał. Plik zostaje lokalnie w tej karcie.",
   }),
   sv: pack({
-    mailTitle: "Webmail på consolecheat.com",
     eyebrow: "PS4-sparfil · i webbläsaren",
     lede: "Läser PARAM.SFO från en PS4-sparfil. Titel, title ID, beskrivning, mapp och konto-ID. Filen stannar i den här fliken.",
     freeClaim: "Helt gratis. Ingenting på den här sidan kostar pengar.",
@@ -567,7 +555,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Vyn kraschade. Filen stannar lokalt i den här fliken.",
   }),
   da: pack({
-    mailTitle: "Webmail på consolecheat.com",
     eyebrow: "PS4-gem · i browseren",
     lede: "Læser PARAM.SFO fra et PS4-gem. Titel, title ID, beskrivelse, mappe og konto-ID. Filen bliver i dette faneblad.",
     freeClaim: "Helt gratis. Der koster intet på denne side.",
@@ -618,7 +605,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Visningen gik ned. Filen bliver lokalt i dette faneblad.",
   }),
   no: pack({
-    mailTitle: "Webmail på consolecheat.com",
     eyebrow: "PS4-lagring · i nettleseren",
     lede: "Leser PARAM.SFO fra en PS4-lagring. Tittel, title ID, beskrivelse, mappe og konto-ID. Filen blir i denne fanen.",
     freeClaim: "Helt gratis. Ingenting på denne siden koster penger.",
@@ -669,7 +655,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Visningen krasjet. Filen blir lokalt i denne fanen.",
   }),
   fi: pack({
-    mailTitle: "Webmail osoitteessa consolecheat.com",
     eyebrow: "PS4-tallennus · selaimessa",
     lede: "Lukee PS4-tallennuksen PARAM.SFO-tiedoston. Nimi, title ID, kuvaus, kansio ja tilin tunnus. Tiedosto pysyy tässä välilehdessä.",
     freeClaim: "Täysin ilmainen. Tällä sivulla mikään ei maksa.",
@@ -720,7 +705,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Näkymä kaatui. Tiedosto pysyy paikallisesti tässä välilehdessä.",
   }),
   cs: pack({
-    mailTitle: "Webmail na consolecheat.com",
     eyebrow: "Uložená pozice PS4 · v prohlížeči",
     lede: "Přečte PARAM.SFO z uložené pozice PS4. Název, title ID, popis, složka a ID účtu. Soubor zůstane v tomto panelu.",
     freeClaim: "Zcela zdarma. Na této stránce se nic neplatí.",
@@ -771,7 +755,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Zobrazení spadlo. Soubor zůstává lokálně v tomto panelu.",
   }),
   sk: pack({
-    mailTitle: "Webmail na consolecheat.com",
     eyebrow: "Uloženie PS4 · v prehliadači",
     lede: "Prečíta PARAM.SFO z uloženia PS4. Názov, title ID, opis, priečinok a ID účtu. Súbor ostane v tomto tabe.",
     freeClaim: "Úplne zadarmo. Na tejto stránke sa nič neplatí.",
@@ -822,7 +805,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Zobrazenie spadlo. Súbor ostáva lokálne v tomto tabe.",
   }),
   hu: pack({
-    mailTitle: "Webmail a consolecheat.com oldalon",
     eyebrow: "PS4-mentés · a böngészőben",
     lede: "Beolvassa egy PS4-mentés PARAM.SFO fájlját. Cím, title ID, leírás, mappa és fiókazonosító. A fájl ebben a lapon marad.",
     freeClaim: "Teljesen ingyenes. Ezen az oldalon semmi nem kerül pénzbe.",
@@ -873,7 +855,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "A nézet összeomlott. A fájl helyben marad ebben a lapban.",
   }),
   ro: pack({
-    mailTitle: "Webmail pe consolecheat.com",
     eyebrow: "Salvare PS4 · în browser",
     lede: "Citește PARAM.SFO dintr-o salvare PS4. Titlu, title ID, descriere, dosar și ID de cont. Fișierul rămâne în acest tab.",
     freeClaim: "Complet gratuit. Pe pagina asta nu costă nimic.",
@@ -924,7 +905,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Afișarea a căzut. Fișierul rămâne local în acest tab.",
   }),
   bg: pack({
-    mailTitle: "Webmail в consolecheat.com",
     eyebrow: "Запис от PS4 · в браузъра",
     lede: "Чете PARAM.SFO от запис за PS4. Заглавие, title ID, описание, папка и ID на акаунт. Файлът остава в този раздел.",
     freeClaim: "Напълно безплатно. На тази страница нищо не струва пари.",
@@ -975,7 +955,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Изгледът се срина. Файлът остава локално в този раздел.",
   }),
   hr: pack({
-    mailTitle: "Webmail na consolecheat.com",
     eyebrow: "Spremljena igra PS4 · u pregledniku",
     lede: "Čita PARAM.SFO iz spremljene igre za PS4. Naslov, title ID, opis, mapa i ID računa. Datoteka ostaje u ovoj kartici.",
     freeClaim: "Potpuno besplatno. Na ovoj stranici ništa ne stoji.",
@@ -1026,7 +1005,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Prikaz se srušio. Datoteka ostaje lokalno u ovoj kartici.",
   }),
   el: pack({
-    mailTitle: "Webmail στο consolecheat.com",
     eyebrow: "Αποθήκευση PS4 · στον browser",
     lede: "Διαβάζει το PARAM.SFO μιας αποθήκευσης PS4. Τίτλος, title ID, περιγραφή, φάκελος και ID λογαριασμού. Το αρχείο μένει σε αυτή την καρτέλα.",
     freeClaim: "Εντελώς δωρεάν. Σε αυτή τη σελίδα δεν πληρώνεις τίποτα.",
@@ -1077,7 +1055,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Η προβολή κατέρρευσε. Το αρχείο μένει τοπικά σε αυτή την καρτέλα.",
   }),
   tr: pack({
-    mailTitle: "consolecheat.com web postası",
     eyebrow: "PS4 kaydı · tarayıcıda",
     lede: "Bir PS4 kaydının PARAM.SFO dosyasını okur. Başlık, title ID, açıklama, klasör ve hesap kimliği. Dosya bu sekmede kalır.",
     freeClaim: "Tamamen ücretsiz. Bu sayfada hiçbir şey para tutmaz.",
@@ -1128,7 +1105,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Görünüm çöktü. Dosya bu sekmede yerel kalır.",
   }),
   ru: pack({
-    mailTitle: "Веб-почта на consolecheat.com",
     eyebrow: "Сохранение PS4 · в браузере",
     lede: "Читает PARAM.SFO из сохранения PS4. Название, title ID, описание, папка и ID аккаунта. Файл остаётся в этой вкладке.",
     freeClaim: "Полностью бесплатно. На этой странице ничего не стоит денег.",
@@ -1179,7 +1155,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Экран упал. Файл остаётся локально в этой вкладке.",
   }),
   uk: pack({
-    mailTitle: "Вебпошта на consolecheat.com",
     eyebrow: "Збереження PS4 · у браузері",
     lede: "Читає PARAM.SFO зі збереження PS4. Назва, title ID, опис, тека й ID облікового запису. Файл лишається в цій вкладці.",
     freeClaim: "Повністю безкоштовно. На цій сторінці нічого не коштує.",
@@ -1230,7 +1205,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Вигляд упав. Файл лишається локально в цій вкладці.",
   }),
   ar: pack({
-    mailTitle: "بريد الويب على consolecheat.com",
     eyebrow: "حفظ PS4 · في المتصفح",
     lede: "يقرأ PARAM.SFO من حفظ PS4. العنوان ومعرّف العنوان والوصف والمجلد ومعرّف الحساب. يبقى الملف في هذا اللسان.",
     freeClaim: "مجاني بالكامل. لا شيء في هذه الصفحة بمقابل.",
@@ -1281,7 +1255,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "تعطّل العرض. يبقى الملف محليًا في هذا اللسان.",
   }),
   he: pack({
-    mailTitle: "דואר אינטרנט ב-consolecheat.com",
     eyebrow: "שמירת PS4 · בדפדפן",
     lede: "קורא PARAM.SFO משמירת PS4. כותרת, title ID, תיאור, תיקייה ומזהה חשבון. הקובץ נשאר בלשונית הזו.",
     freeClaim: "חינם לגמרי. בעמוד הזה שום דבר לא עולה כסף.",
@@ -1332,7 +1305,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "התצוגה קרסה. הקובץ נשאר מקומית בלשונית הזו.",
   }),
   ja: pack({
-    mailTitle: "consolecheat.com のウェブメール",
     eyebrow: "PS4 セーブ · ブラウザ内",
     lede: "PS4 セーブの PARAM.SFO を読みます。タイトル、タイトル ID、説明、フォルダ、アカウント ID。ファイルはこのタブに残ります。",
     freeClaim: "完全に無料です。このページでお金はかかりません。",
@@ -1383,7 +1355,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "表示が止まりました。ファイルはこのタブの中に残っています。",
   }),
   ko: pack({
-    mailTitle: "consolecheat.com 웹메일",
     eyebrow: "PS4 세이브 · 브라우저",
     lede: "PS4 세이브의 PARAM.SFO를 읽습니다. 제목, 타이틀 ID, 설명, 폴더, 계정 ID. 파일은 이 탭에 남습니다.",
     freeClaim: "완전히 무료입니다. 이 페이지에서 돈은 들지 않습니다.",
@@ -1434,7 +1405,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "화면이 멈췄습니다. 파일은 이 탭 안에 로컬로 남습니다.",
   }),
   zh: pack({
-    mailTitle: "consolecheat.com 上的网页邮箱",
     eyebrow: "PS4 存档 · 在浏览器里",
     lede: "读取 PS4 存档里的 PARAM.SFO。标题、Title ID、说明、文件夹和账户 ID。文件留在这个标签页里。",
     freeClaim: "完全免费。这个页面不收费。",
@@ -1485,7 +1455,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "界面出错了。文件仍留在这个标签页本地。",
   }),
   "zh-Hant": pack({
-    mailTitle: "consolecheat.com 上的網頁信箱",
     eyebrow: "PS4 存檔 · 在瀏覽器裡",
     lede: "讀取 PS4 存檔裡的 PARAM.SFO。標題、Title ID、說明、資料夾和帳戶 ID。檔案留在這個分頁裡。",
     freeClaim: "完全免費。這個頁面不收費。",
@@ -1536,7 +1505,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "介面出錯了。檔案仍留在這個分頁本地。",
   }),
   th: pack({
-    mailTitle: "เว็บเมลบน consolecheat.com",
     eyebrow: "เซฟ PS4 · ในเบราว์เซอร์",
     lede: "อ่าน PARAM.SFO จากเซฟ PS4 ชื่อเรื่อง, title ID, คำอธิบาย, โฟลเดอร์ และรหัสบัญชี ไฟล์อยู่แท็บนี้",
     freeClaim: "ฟรีทั้งหมด หน้านี้ไม่มีค่าใช้จ่าย",
@@ -1587,7 +1555,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "มุมมองล้ม ไฟล์ยังอยู่เฉพาะในแท็บนี้",
   }),
   id: pack({
-    mailTitle: "Webmail di consolecheat.com",
     eyebrow: "Simpanan PS4 · di browser",
     lede: "Membaca PARAM.SFO dari simpanan PS4. Judul, title ID, deskripsi, folder, dan ID akun. Berkas tetap di tab ini.",
     freeClaim: "Sepenuhnya gratis. Tidak ada yang berbayar di halaman ini.",
@@ -1638,7 +1605,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Tampilan gagal. Berkas tetap lokal di tab ini.",
   }),
   ms: pack({
-    mailTitle: "Webmail di consolecheat.com",
     eyebrow: "Simpanan PS4 · dalam pelayar",
     lede: "Membaca PARAM.SFO daripada simpanan PS4. Tajuk, title ID, perihalan, folder dan ID akaun. Fail kekal dalam tab ini.",
     freeClaim: "Percuma sepenuhnya. Tiada apa-apa di halaman ini dikenakan bayaran.",
@@ -1689,7 +1655,6 @@ export const copy: Record<Lang, Copy> = {
     crash: "Paparan gagal. Fail kekal secara tempatan dalam tab ini.",
   }),
   vi: pack({
-    mailTitle: "Webmail trên consolecheat.com",
     eyebrow: "File lưu PS4 · trong trình duyệt",
     lede: "Đọc PARAM.SFO từ file lưu PS4. Tựa, title ID, mô tả, thư mục và ID tài khoản. File ở lại tab này.",
     freeClaim: "Hoàn toàn miễn phí. Trang này không thu tiền.",
