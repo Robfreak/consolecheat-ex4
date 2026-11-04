@@ -13,6 +13,8 @@ import {
   type Copy,
   type Lang,
 } from "./messages";
+import { formatWhen } from "./format";
+import { archiveHref, finderHref, otherTools } from "./links";
 import { pickParamAndIcon } from "./pick";
 import {
   SFO_MAX_BYTES,
@@ -39,8 +41,6 @@ type Loaded = {
   date: SaveDate | null;
   iconFile: File | null;
 };
-
-const FINDER = "https://robfreak.github.io/consolecheat-ex1/?q=";
 
 function readPage(): Page {
   const hash = location.hash.replace(/^#\/?/, "");
@@ -74,31 +74,6 @@ function applyTheme(next: Theme) {
   localStorage.setItem("consolecheat-theme", next);
   const meta = document.querySelector('meta[name="theme-color"]');
   meta?.setAttribute("content", next === "light" ? "#f4f1eb" : "#07090e");
-}
-
-function finderHref(id: string): string | null {
-  if (!/^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/.test(id)) return null;
-  return `${FINDER}${encodeURIComponent(id)}`;
-}
-
-function formatWhen(ms: number, lang: Lang): string {
-  const locale = lang === "no" ? "nb" : lang;
-  const date = new Date(ms);
-  const withZone = { dateStyle: "medium" as const, timeStyle: "short" as const, timeZoneName: "short" as const };
-  try {
-    return new Intl.DateTimeFormat(locale, withZone).format(date);
-  } catch {
-    // ICU still rejects timeZoneName together with dateStyle and timeStyle.
-  }
-  try {
-    const when = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(date);
-    const zone = new Intl.DateTimeFormat(locale, { timeZoneName: "short" })
-      .formatToParts(date)
-      .find((part) => part.type === "timeZoneName")?.value;
-    return zone ? `${when} ${zone}` : when;
-  } catch {
-    return date.toISOString();
-  }
 }
 
 function dateLabel(t: Copy, source: SaveDateSource): string {
@@ -391,6 +366,25 @@ export function App() {
       <footer className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm leading-relaxed text-subtle sm:px-6">
           <p className="text-fg">{t.brand}</p>
+          <nav aria-labelledby="more-tools" className="flex flex-col gap-1">
+            <p id="more-tools" className="text-fg">
+              {t.moreTools}
+            </p>
+            <ul className="flex flex-wrap gap-x-4 gap-y-1">
+              {otherTools.map((tool) => (
+                <li key={tool.id}>
+                  <a
+                    href={tool.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-steel underline-offset-4 hover:underline"
+                  >
+                    {tool.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <nav className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Impressum und Datenschutz">
             <a href="#impressum" className="text-steel underline-offset-4 hover:underline">
               Impressum
@@ -423,13 +417,15 @@ function SaveCard({
   onToggle: () => void;
   onClear: () => void;
 }) {
-  const title = entryText(loaded.entries, "TITLE") ?? entryText(loaded.entries, "MAINTITLE");
+  const titleField = entryText(loaded.entries, "TITLE");
+  const title = titleField ?? entryText(loaded.entries, "MAINTITLE");
   const titleId = entryText(loaded.entries, "TITLE_ID");
   const subtitle = entryText(loaded.entries, "SUBTITLE");
   const detail = entryText(loaded.entries, "DETAIL");
   const directory = entryText(loaded.entries, "SAVEDATA_DIRECTORY");
   const account = findEntry(loaded.entries, "ACCOUNT_ID");
   const href = titleId ? finderHref(titleId) : null;
+  const plusHref = archiveHref(titleField, titleId);
 
   return (
     <article className="panel mt-4 rounded-xl p-5 sm:p-6">
@@ -449,6 +445,19 @@ function SaveCard({
           {t.clear}
         </button>
       </div>
+
+      {plusHref ? (
+        <p className="mt-4">
+          <a
+            href={plusHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-steel underline-offset-4 hover:underline"
+          >
+            {t.openArchive}
+          </a>
+        </p>
+      ) : null}
 
       {loaded.entries.length === 0 ? <p className="mt-4 text-muted">{t.noFields}</p> : null}
 
