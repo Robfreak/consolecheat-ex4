@@ -21,6 +21,10 @@ test("german is the default and the account toggle uses Anzeigen / Show", () => 
   assert.equal(copy.en.errBadFormat, "A field has an invalid type.");
   assert.equal(copy.de.errTooMany.includes("Offsets"), false);
   assert.equal(copy.en.errBadFormat.includes("offset"), false);
+  assert.equal(copy.de.moreTools, "Weitere Werkzeuge");
+  assert.equal(copy.en.moreTools, "More tools");
+  assert.match(copy.de.openArchive, /PS-Plus-Archiv/);
+  assert.match(copy.en.openArchive, /PS-Plus-Archiv/);
 });
 
 test("every language has the same filled-in copy", () => {
@@ -33,5 +37,6 @@ test("every language has the same filled-in copy", () => {
     }
     assert.equal(copy[id].brand, "consolecheat");
     assert.equal(copy[id].title, "Save-Info-Leser");
+    assert.match(copy[id].openArchive, /PS-Plus-Archiv/);
   }
 });
